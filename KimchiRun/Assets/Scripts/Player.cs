@@ -40,4 +40,20 @@ public class Player : MonoBehaviour
             isGrounded = true;
         }
     }
+
+    void OgerEnter2D(Collider2D collider)
+    {
+        if (collider.gameObject.tag == "enemy")
+        {
+
+        }
+        else if (collider.gameObject.tag == "food")
+        {
+
+        }
+        else if (collider.gameObject.tag == "golden")
+        {
+
+        }
+    }
 }
