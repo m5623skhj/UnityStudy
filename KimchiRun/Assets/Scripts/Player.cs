@@ -11,7 +11,10 @@ public class Player : MonoBehaviour
 
     public Animator playerAnimator;
 
+    public BoxCollider2D playerCollider;
+
     private bool isGrounded = false;
+    private bool isInvincible = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -41,19 +44,53 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void KillPlayer()
+    {
+        playerCollider.enabled = false;
+        playerAnimator.enabled = false;
+        playerRigidBody.AddForceY(jumpForce, ForceMode2D.Impulse);
+    }
+
+    void Hit()
+    {
+        --GameManager.instance.lives;
+    }
+
+    void Heal()
+    {
+        GameManager.instance.lives = Mathf.Min(3, GameManager.instance.lives + 1);
+    }
+
+    void StartInvincible()
+    {
+        isInvincible = true;
+        Invoke("StopInvincible", 5f);
+    }
+
+    void StopInvincible()
+    {
+        isInvincible = false;
+    }
+
     void OgerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.tag == "enemy")
         {
-
+            if (!isInvincible)
+            {
+                Destroy(collider.gameObject);
+                Hit();
+            }
         }
         else if (collider.gameObject.tag == "food")
         {
-
+            Destroy(collider.gameObject);
+            Heal();
         }
         else if (collider.gameObject.tag == "golden")
         {
-
+            Destroy(collider.gameObject);
+            StartInvincible();
         }
     }
 }
